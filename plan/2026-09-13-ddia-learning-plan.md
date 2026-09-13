@@ -1,13 +1,15 @@
 # DDIA Learning Plan — Design
 
-**Date:** 2026-09-13
+**Date:** 2026-09-13 (remapped 2026-09-13 for the 2nd edition)
 **Author:** deandrebaker (with Claude)
-**Status:** Approved design, pending implementation
+**Status:** Approved design, scaffolded
+**Edition:** 2nd (Kleppmann & Riccomini, Feb 2026) — 14 chapters
 
 ## 1. Purpose
 
 Build genuine system design skill by reading *Designing Data-Intensive
-Applications* (Kleppmann, 1st ed.) with a structured practice loop around it.
+Applications*, 2nd edition (Kleppmann & Riccomini, February 2026), with a
+structured practice loop around it.
 Depth of understanding is the primary goal; interview performance is treated as
 a *test* of that understanding rather than the target itself.
 
@@ -26,13 +28,13 @@ By the end of the plan:
 
 1. A working toy distributed key-value store in Go, built incrementally, with
    a git tag per chapter so its evolution is readable as a diff.
-2. Twelve closed-book chapter distillations, each with an explicit
+2. Fourteen closed-book chapter distillations, each with an explicit
    "what I got wrong" section.
-3. Twelve Feynman explainers graded against a rubric, with scores trending up.
-4. Six design problems plus eight timed mock interviews, each with written
+3. Fourteen Feynman explainers graded against a rubric, with scores trending up.
+4. Seven design problems plus eight timed mock interviews, each with written
    post-mortems.
 5. A spaced-repetition queue that has been worked continuously, such that
-   chapter 3 material is still retrievable cold in February.
+   chapter 4 material is still retrievable cold in March.
 
 The real test: given an unfamiliar system design problem, able to name the
 failure modes *before* naming the components.
@@ -61,48 +63,60 @@ Closed-book recall always does. That discomfort is the mechanism working.
 
 ## 5. The build spine
 
-Chapters 3–9 and 12 compound into **one** system — a toy distributed key-value
-store in **Go**, in `builds/kvstore/` as a single module. Chapters 1, 2, 10 and
-11 get standalone exercises. Go was chosen because its concurrency primitives
-make replication and consensus work materially clearer, and it is close to what
-real infrastructure is written in.
+Chapters 4–10 and 13 compound into **one** system — a toy distributed key-value
+store in **Go**, in `builds/kvstore/` as a single module. Chapters 1, 2, 3, 11
+and 12 get standalone exercises; chapter 14 has no build. Go was chosen because
+its concurrency primitives make replication and consensus work materially
+clearer, and it is close to what real infrastructure is written in.
+
+The 2nd edition preserves the *relative* order of the spine chapters from the
+1st, so the compounding design carries over intact — only the numbering shifts
+(+1 from chapter 4 onward), and two chapters are genuinely new.
 
 | Chapter | Type | Build |
 |---------|------|-------|
-| 1 — Reliable, Scalable, Maintainable | standalone | Load generator + latency histogram. Demonstrate that mean latency lies, and that p99 amplifies across a fan-out. |
-| 2 — Data Models & Query Languages | standalone | Model one domain three ways (relational, document, graph); run the same three queries against each. Feel join pain and schema-on-read pain directly. |
-| 3 — Storage & Retrieval | **spine** | Append-only log + hash index (Bitcask-style), then memtable → SSTable flush → compaction: a mini LSM-tree. Benchmark against SQLite's B-tree. |
-| 4 — Encoding & Evolution | spine | The store's wire format: length-prefixed binary with field tags. Evolve the schema; prove backward/forward compatibility by replaying old bytes against new code. |
-| 5 — Replication | spine | Single-leader replication over that wire format. Inject lag; *reproduce* read-your-writes and monotonic-read violations; then fix them. |
-| 6 — Partitioning | spine | Consistent hashing with virtual nodes, a routing layer, a rebalance operation. Manufacture a hot shard with skewed keys. |
-| 7 — Transactions | spine | MVCC snapshot isolation over the storage engine. Write a test that *produces* write skew, then prevent it. |
-| 8 — The Trouble with Distributed Systems | spine | A fault injector: network partitions, message reordering, delays, clock skew. Point it at your own cluster. This is the cycle where chapters 5–7 are revealed to be wrong. |
-| 9 — Consistency & Consensus | spine (anchor) | Raft leader election + log replication, replacing the hand-rolled chapter 5 replication. Run it under the chapter 8 fault injector. |
-| 10 — Batch Processing | standalone | MapReduce from scratch (map, shuffle/sort, reduce). Implement both a reduce-side join and a broadcast hash join; measure the gap. |
-| 11 — Stream Processing | standalone | A toy Kafka: partitioned append-only log with consumer offsets. Then windowed aggregation, event-time vs processing-time, late arrivals. |
-| 12 — The Future of Data Systems | spine (tie-off) | CDC pipeline: tail the chapter 3 write-ahead log → publish to the chapter 11 event log → materialize a derived read-optimized view. The whole spine in one dataflow. |
+| 1 — Trade-Offs in Data Systems Architecture | standalone | Same dataset, two architectures: run one analytical query workload against a row store (SQLite) and a column store (DuckDB). Measure the gap. Instruments the chapter's operational-vs-analytical divide directly. |
+| 2 — Defining Nonfunctional Requirements | standalone | Load generator + latency histogram. Demonstrate that mean latency lies, and that p99 amplifies across a fan-out. |
+| 3 — Data Models and Query Languages | standalone | Model one domain three ways (relational, document, graph); run the same three queries against each. Feel join pain and schema-on-read pain directly. |
+| 4 — Storage and Retrieval | **spine** | Append-only log + hash index (Bitcask-style), then memtable → SSTable flush → compaction: a mini LSM-tree. Benchmark against SQLite's B-tree. |
+| 5 — Encoding and Evolution | spine | The store's wire format: length-prefixed binary with field tags. Evolve the schema; prove backward/forward compatibility by replaying old bytes against new code. |
+| 6 — Replication | spine | Single-leader replication over that wire format. Inject lag; *reproduce* read-your-writes and monotonic-read violations; then fix them. |
+| 7 — Sharding | spine | Consistent hashing with virtual nodes, a routing layer, a rebalance operation. Manufacture a hot shard with skewed keys. |
+| 8 — Transactions | spine | MVCC snapshot isolation over the storage engine. Write a test that *produces* write skew, then prevent it. |
+| 9 — The Trouble with Distributed Systems | spine | A fault injector: network partitions, message reordering, delays, clock skew. Point it at your own cluster. This is the cycle where chapters 6–8 are revealed to be wrong. |
+| 10 — Consistency and Consensus | spine (anchor) | Raft leader election + log replication, replacing the hand-rolled chapter 6 replication. Run it under the chapter 9 fault injector. |
+| 11 — Batch Processing | standalone | MapReduce from scratch (map, shuffle/sort, reduce). Implement both a reduce-side join and a broadcast hash join; measure the gap. |
+| 12 — Stream Processing | standalone | A toy Kafka: partitioned append-only log with consumer offsets. Then windowed aggregation, event-time vs processing-time, late arrivals. |
+| 13 — A Philosophy of Streaming Systems | spine (tie-off) | CDC pipeline: tail the chapter 4 write-ahead log → publish to the chapter 12 event log → materialize a derived read-optimized view. The whole spine in one dataflow. |
+| 14 — Doing the Right Thing | standalone | **No build.** The freed time goes to a written critique of a real system's data practices plus this cycle's design problem. |
 
-**Git tags:** `ch03-complete` … `ch12-complete` on `builds/kvstore/`. The diff
-`ch05-complete..ch09-complete` is itself a deliverable: it shows, in your own
+**Git tags:** `ch04-complete` … `ch13-complete` on `builds/kvstore/`. The diff
+`ch06-complete..ch10-complete` is itself a deliverable: it shows, in your own
 code, what consensus bought over naive leader-follower replication.
 
 ## 6. Design problems
 
-Six, in the off-cycles. Each is chosen so the chapter just finished is what
-unlocks it.
+Seven, sited so the chapter just finished is what unlocks each one. They are no
+longer on a fixed odd/even rhythm — placement follows the material.
 
 | After | Problem | Focus it forces |
 |-------|---------|-----------------|
-| Ch 2 | URL shortener | Data model, access patterns, read/write ratio |
-| Ch 4 | News feed / activity stream | Fan-out on write vs read (Kleppmann's own Twitter example) |
-| Ch 6 | Sharded rate limiter + counter at scale | Partitioning, hot keys, approximate vs exact |
-| Ch 8 | Distributed job scheduler | Failure detection, at-least-once vs exactly-once |
-| Ch 10 | Metrics / observability system | Time-series storage, rollups, batch pipelines |
-| Ch 12 | Payment ledger | Consistency-critical design, auditability, idempotence |
+| Ch 3 | URL shortener | Data model, access patterns, read/write ratio |
+| Ch 5 | News feed / activity stream | Fan-out on write vs read; schema evolution across a rollout |
+| Ch 7 | Sharded rate limiter + counter at scale | Partitioning, hot keys, approximate vs exact |
+| Ch 9 | Distributed job scheduler | Failure detection, at-least-once vs exactly-once |
+| Ch 11 | Metrics / observability system | Time-series storage, rollups, batch pipelines |
+| Ch 13 | Payment ledger | Event sourcing, derived views, auditability, idempotence |
+| Ch 14 | User data deletion & consent pipeline | Deletion across derived data and backups, consent propagation, retention |
+
+The chapter 14 problem is the one with no 1st-edition equivalent. It is also the
+hardest to fake: deletion is trivial to promise and genuinely difficult to
+implement once data has been replicated, cached, and derived into three other
+places — which is exactly what the preceding thirteen chapters built.
 
 ## 7. Interview block
 
-Four weeks, Jan 25 – Feb 21, 2027. Two timed 45-minute mock designs per week,
+Four weeks, Feb 14 – Mar 13, 2027. Two timed 45-minute mock designs per week,
 eight total, drawn from the standard question bank. Each is graded against the
 design-problem rubric and followed by a written post-mortem naming the single
 biggest gap in the answer.
@@ -111,22 +125,28 @@ biggest gap in the answer.
 
 | Cycle | Dates |
 |-------|-------|
-| Ch 1 | Sep 14 – 23, 2026 |
-| Ch 2 | Sep 24 – Oct 3, 2026 |
-| Ch 3 | Oct 4 – 13, 2026 |
-| Ch 4 | Oct 14 – 23, 2026 |
-| Ch 5 | Oct 24 – Nov 2, 2026 |
-| Ch 6 | Nov 3 – 12, 2026 |
-| Ch 7 | Nov 13 – 22, 2026 |
-| Ch 8 | Nov 23 – Dec 2, 2026 |
-| Ch 9 | Dec 3 – 12, 2026 |
-| Ch 10 | Dec 13 – 22, 2026 |
+| Ch 1 — Trade-Offs in Data Systems Architecture | Sep 14 – 23, 2026 |
+| Ch 2 — Defining Nonfunctional Requirements | Sep 24 – Oct 3, 2026 |
+| Ch 3 — Data Models and Query Languages | Oct 4 – 13, 2026 |
+| Ch 4 — Storage and Retrieval | Oct 14 – 23, 2026 |
+| Ch 5 — Encoding and Evolution | Oct 24 – Nov 2, 2026 |
+| Ch 6 — Replication | Nov 3 – 12, 2026 |
+| Ch 7 — Sharding | Nov 13 – 22, 2026 |
+| Ch 8 — Transactions | Nov 23 – Dec 2, 2026 |
+| Ch 9 — The Trouble with Distributed Systems | Dec 3 – 12, 2026 |
+| Ch 10 — Consistency and Consensus | Dec 13 – 22, 2026 |
 | *Holiday pause / slack* | Dec 23, 2026 – Jan 3, 2027 |
-| Ch 11 | Jan 4 – 13, 2027 |
-| Ch 12 | Jan 14 – 23, 2027 |
-| Interview block | Jan 25 – Feb 21, 2027 |
+| Ch 11 — Batch Processing | Jan 4 – 13, 2027 |
+| Ch 12 — Stream Processing | Jan 14 – 23, 2027 |
+| Ch 13 — A Philosophy of Streaming Systems | Jan 24 – Feb 2, 2027 |
+| Ch 14 — Doing the Right Thing | Feb 3 – 12, 2027 |
+| Interview block | Feb 14 – Mar 13, 2027 |
 
-**Overrun policy:** chapter 9's Raft build is the most likely to overrun. If it
+The Raft anchor build (ch 10) now lands immediately before the holiday pause,
+which is a better arrangement than the 1st-edition mapping produced: the cycle
+most likely to overrun is backed directly onto the reserve.
+
+**Overrun policy:** chapter 10's Raft build is the most likely to overrun. If it
 does, take the time from the holiday pause rather than cutting the build.
 Consensus pays back the most in real architecture work. If any other cycle
 slips, cut the build's polish, never the closed-book distillation — phase 2 is
@@ -142,11 +162,12 @@ the phase with the highest learning-per-hour and the strongest temptation to ski
 ├── explainers/chNN.md     # Feynman write-ups
 ├── diagrams/chNN.md       # from-memory mermaid, then reference version
 ├── builds/
-│   ├── ch01-latency-harness/
-│   ├── ch02-three-models/
-│   ├── kvstore/           # THE SPINE — one Go module, ch3–9 + 12
-│   ├── ch10-mapreduce/
-│   └── ch11-eventlog/
+│   ├── ch01-row-vs-column/
+│   ├── ch02-latency-harness/
+│   ├── ch03-three-models/
+│   ├── kvstore/           # THE SPINE — one Go module, ch4–10 + 13
+│   ├── ch11-mapreduce/
+│   └── ch12-eventlog/
 ├── problems/              # design problem answers + graded feedback
 ├── review/queue.md        # spaced-repetition retrieval queue
 └── .claude/
@@ -161,7 +182,7 @@ the phase with the highest learning-per-hour and the strongest temptation to ski
 | Command | Behaviour |
 |---------|-----------|
 | `/cycle N` | Scaffold chapter N: create note/explainer/diagram/build stubs, update `PROGRESS.md`, state the build goal and timebox. |
-| `/grill N` | Closed-book quiz in four escalating tiers: **recall** the mechanism → **apply** it to a scenario → **argue** the tradeoff → **adversarial** (e.g. "your chapter 5 replication drops writes under this partition; why, and what did the book tell you that you ignored?"). Every miss is appended to `review/queue.md`. |
+| `/grill N` | Closed-book quiz in four escalating tiers: **recall** the mechanism → **apply** it to a scenario → **argue** the tradeoff → **adversarial** (e.g. "your chapter 6 replication drops writes under this partition; why, and what did the book tell you that you ignored?"). Every miss is appended to `review/queue.md`. |
 | `/grade explainer N` / `/grade problem N` | Score against the relevant rubric, with specific textual evidence for every score. |
 | `/review` | Pull due items from the retrieval queue and quiz them cold; update intervals. |
 
@@ -219,17 +240,17 @@ things immediately, which substantially reduces learning. It must instruct:
 
 | Risk | Mitigation |
 |------|------------|
-| Build debt compounds — a skipped chapter-5 build blocks chapter 6 | Standalone chapters (1, 2, 10, 11) act as catch-up slack; holiday pause is the larger reserve |
+| Build debt compounds — a skipped chapter-6 build blocks chapter 7 | Standalone chapters (1, 2, 3, 11, 12) and build-free chapter 14 act as catch-up slack; holiday pause is the larger reserve |
 | Closed-book distillation gets quietly skipped because it is uncomfortable | It is phase 2, before the fun part (the build); `/grill` is explicitly closed-book, so skipping it shows up immediately as a bad session |
-| Chapter 9 (Raft) overruns badly | Budgeted as the anchor build; holiday pause is the designated overflow |
-| Grading drifts encouraging over time | Rubrics demand textual evidence per score; scores are tracked in `PROGRESS.md` so drift is visible |
-| Motivation decay around chapters 8–9, the hardest stretch | These are also the highest-payoff chapters; the compounding spine means quitting there leaves a visibly unfinished system |
+| Chapter 10 (Raft) overruns badly | Budgeted as the anchor build, and scheduled to end immediately before the holiday pause, which is the designated overflow |
+| Grading drifts encouraging over time | Rubrics demand textual evidence per score; scores are tracked across all fourteen chapters in `PROGRESS.md` so drift is visible as a trend |
+| Motivation decay around chapters 9–10, the hardest stretch | These are also the highest-payoff chapters; the compounding spine means quitting there leaves a visibly unfinished system |
 
 ## 13. Non-goals
 
 - Production-quality code. Every build is a teaching artifact and should look like one.
-- Reading DDIA's second edition or supplementary papers on the first pass. Paper
-  follow-ups (Raft, Dynamo, Bigtable, Spanner) are optional extensions after ch 12.
+- Supplementary papers on the first pass. Paper follow-ups (Raft, Dynamo,
+  Bigtable, Spanner) are optional extensions after chapter 14.
 - Covering system design topics DDIA does not cover (CDNs, API gateway design,
   mobile sync). Those are gaps to close after the book, not during it.
 - Public writing. Explainers are for the learner and for grading, not publication.

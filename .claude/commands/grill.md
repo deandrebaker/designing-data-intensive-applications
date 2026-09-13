@@ -25,7 +25,7 @@ compaction, and what do you feel first?"
 "Why would anyone still choose a B-tree here? Make the strongest case against
 the thing you just described."
 
-**Tier 4 — Adversarial.** Attack their own build. "Your chapter 5 replication
+**Tier 4 — Adversarial.** Attack their own build. "Your chapter 6 replication
 drops acknowledged writes under this specific partition. Walk me through why,
 and tell me what the book already warned you about that you didn't implement."
 Use their real code — read it before asking.

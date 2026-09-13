@@ -1,10 +1,11 @@
 # Designing Data-Intensive Applications
 
-A structured read of Kleppmann's *Designing Data-Intensive Applications*, with
-notes, builds, and practice problems. Depth first; interview practice is how
-the depth gets tested, not the goal.
+A structured read of *Designing Data-Intensive Applications*, 2nd edition
+(Kleppmann & Riccomini, Feb 2026 — 14 chapters), with notes, builds, and
+practice problems. Depth first; interview practice is how the depth gets
+tested, not the goal.
 
-**Runs Sep 14, 2026 → Feb 21, 2027.** Full design:
+**Runs Sep 14, 2026 → Mar 13, 2027.** Full design:
 [`plan/2026-09-13-ddia-learning-plan.md`](plan/2026-09-13-ddia-learning-plan.md).
 Live status: [`PROGRESS.md`](PROGRESS.md).
 
@@ -22,10 +23,11 @@ the one before it:
 
 ## The spine
 
-Chapters 3–9 and 12 compound into one Go toy distributed key-value store in
+Chapters 4–10 and 13 compound into one Go toy distributed key-value store in
 [`builds/kvstore/`](builds/kvstore/) — storage engine, wire format,
-replication, partitioning, transactions, fault injection, Raft, CDC. Each
-chapter stress-tests the last. Chapters 1, 2, 10 and 11 get standalone builds.
+replication, sharding, transactions, fault injection, Raft, CDC. Each chapter
+stress-tests the last. Chapters 1, 2, 3, 11 and 12 get standalone builds;
+chapter 14 has no build and trades it for an essay and a design problem.
 
 ## Commands
 

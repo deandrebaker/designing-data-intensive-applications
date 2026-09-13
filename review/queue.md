@@ -10,7 +10,7 @@ that survives an 8-cycle gap graduates and is deleted.
 Format:
 
 ```
-- [ch03] What does compaction actually reclaim, and what does it cost while running?
+- [ch04] What does compaction actually reclaim, and what does it cost while running?
   due: 5 | interval: 2 | misses: 1
 ```
 
