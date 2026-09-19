@@ -12,8 +12,19 @@ Start the cycle for **chapter $1** of DDIA.
 2. Create these files if they don't exist. Each gets a stub with headings only
    — no content, since the content must come from memory:
 
-   - `notes/chNN-<slug>.md` — headings: `## Distillation (closed-book)` and
-     `## What I got wrong`
+   - `notes/chNN-<slug>.md` — use the structure in `notes/ch01-trade-offs.md`
+     verbatim: under `## Distillation (closed-book)`, the sub-headings **The
+     question this chapter answers**, **Mechanisms**, **Trade-offs** (as an
+     empty table: axis / one side / other side / what decides), **When this
+     breaks**, **Connections**, and **Open questions**; then `## What I got
+     wrong`. Carry over the HTML-comment prompts under each, including the
+     45-minute split between recall and correction, the `[sure]`/`[shaky]`
+     confidence marking, and the reminder that the cost slot under each
+     mechanism is mandatory.
+
+     The sub-headings are deliberately *not* the chapter's own section
+     headings — organizing by the book's structure lets them reproduce a
+     table of contents without understanding anything.
    - `explainers/chNN.md` — heading: `## <chapter title>, explained` plus a
      reminder of the constraint: no jargon undefined in the same document
    - `diagrams/chNN.md` — headings: `## From memory` (empty mermaid block) and
