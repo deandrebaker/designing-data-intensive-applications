@@ -12,19 +12,68 @@ Start the cycle for **chapter $1** of DDIA.
 2. Create these files if they don't exist. Each gets a stub with headings only
    — no content, since the content must come from memory:
 
-   - `notes/chNN-<slug>.md` — use the structure in `notes/ch01-trade-offs.md`
-     verbatim: under `## Distillation (closed-book)`, the sub-headings **The
-     question this chapter answers**, **Mechanisms**, **Trade-offs** (as an
-     empty table: axis / one side / other side / what decides), **When this
-     breaks**, **Connections**, and **Open questions**; then `## What I got
-     wrong`. Carry over the HTML-comment prompts under each, including the
-     45-minute split between recall and correction, the `[sure]`/`[shaky]`
-     confidence marking, and the reminder that the cost slot under each
-     mechanism is mandatory.
+   - `notes/chNN-<slug>.md` — exactly this, with the chapter's own title:
+
+     ```markdown
+     # Ch N — <chapter title>
+
+     ## Distillation (closed-book)
+
+     <!-- Book shut. 45 minutes. Full sentences, not fragments — a fragment
+          can't be wrong, which is how closed-book recall gets faked without
+          you noticing. Mark every claim [sure] or [shaky]. -->
+
+     ### The question this chapter answers
+
+     <!-- One sentence. If you can't write it, you didn't get the chapter. -->
+
+     ### Mechanisms
+
+     <!-- For each: what it does / how it works / what it costs.
+          The cost slot is mandatory. An empty one means you absorbed
+          marketing, not engineering — and it's exactly what the explainer
+          rubric scores in dimension 2. -->
+
+     ### Trade-offs
+
+     | Axis | One side | Other side | What decides |
+     |------|----------|------------|--------------|
+     |      |          |            |              |
+
+     ### When this breaks
+
+     <!-- Failure modes, and the conditions that trigger them. -->
+
+     ### Connections
+
+     <!-- What this changes about earlier chapters and about your own build. -->
+
+     ### Open questions
+
+     <!-- WRITE THESE BEFORE OPENING THE BOOK.
+          Things you're unsure of. Highest-value section in the file. -->
+
+     ## What I got wrong
+
+     <!-- Only after the above is done. 45 minutes. Open the book and correct
+          yourself here. Each correction cites a section.
+
+          Watch for two kinds:
+            - [shaky] that turned out right — you know more than you think
+            - [sure] that turned out wrong — the dangerous kind; raw
+              correctness hides these completely
+
+          Every miss goes into review/queue.md. -->
+     ```
 
      The sub-headings are deliberately *not* the chapter's own section
      headings — organizing by the book's structure lets them reproduce a
      table of contents without understanding anything.
+
+     Where a section will predictably be thin or empty for this chapter, say
+     so in its comment, so a short section doesn't read as bad recall.
+     Connections is empty until roughly chapter 6.
+
    - `explainers/chNN.md` — heading: `## <chapter title>, explained` plus a
      reminder of the constraint: no jargon undefined in the same document
    - `diagrams/chNN.md` — headings: `## From memory` (empty mermaid block) and
