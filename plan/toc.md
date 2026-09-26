@@ -13,7 +13,31 @@ This file counts as the book: it's closed during Distill and `/grill`.
 
 ## 1 — Trade-Offs in Data Systems Architecture
 
-<!-- not yet copied -->
+### Operational Versus Analytical Systems
+
+#### Characterizing Transaction Processing and Analytics
+
+#### Data Warehousing
+
+#### Systems of Record and Derived Data
+
+### Cloud Versus Self-Hosting
+
+#### Pros and Cons of Cloud Services
+
+#### Cloud Native System Architecture
+
+#### Operations in the Cloud Era
+
+### Distributed Versus Single-Node Systems
+
+#### Problems with Distributed Systems
+
+#### Microservices and Serverless
+
+#### Cloud Computing Versus Supercomputing
+
+### Data Systems, Law, and Society
 
 ## 2 — Defining Nonfunctional Requirements
 
