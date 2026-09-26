@@ -56,12 +56,15 @@ Does it link to what came before?
 - **5** — Explicitly builds on or *corrects* an earlier chapter's model,
   including their own earlier builds.
 
+For chapters 1–3 there are no earlier chapters yet, so score connections to
+systems the learner has built or run at work instead.
+
 ---
 
 ## Grading notes
 
 - Lead with the lowest score, not the highest.
 - For any score below 4, write the sentence a 5 would have contained.
-- Score 3 is the honest default for competent-but-incomplete work. Resist
-  drifting upward across cycles — check the last two chapters' scores in
-  `PROGRESS.md` before finalizing.
+- Score 3 is the honest default for competent-but-incomplete work.
+- Score from this explainer's text alone. Earlier chapters' scores are for
+  the learner to read as a trend; anchoring on them is how drift starts.

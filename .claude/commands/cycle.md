@@ -5,11 +5,16 @@ argument-hint: <chapter number>
 
 Start the cycle for **chapter $1** of DDIA.
 
-1. Read `plan/2026-09-13-ddia-learning-plan.md` — specifically the build spine
-   table (§5), the schedule (§8), and whether chapter $1 is a design-problem
-   cycle (§6).
+1. Check that the previous chapter is closed: its status in `PROGRESS.md` is
+   ✓ closed. If it isn't, say so, point them at `/close` for that chapter, and
+   stop. Scaffold anyway only if the learner explicitly says to. (Chapter 1 has no
+   previous chapter.)
 
-2. Create these files if they don't exist. Each gets a stub with headings only
+2. Read `plan/2026-09-13-ddia-learning-plan.md` — specifically the build spine
+   table, scope notes and open questions (§5), and whether chapter $1 is a
+   design-problem cycle (§6).
+
+3. Create these files if they don't exist. Each gets a stub with headings only
    — no content, since the content must come from memory:
 
    - `notes/chNN-<slug>.md` — exactly this, with the chapter's own title:
@@ -46,7 +51,8 @@ Start the cycle for **chapter $1** of DDIA.
 
      ### Connections
 
-     <!-- What this changes about earlier chapters and about your own build. -->
+     <!-- What this changes about earlier chapters, about your own builds,
+          and about systems you've worked on. -->
 
      ### Open questions
 
@@ -56,14 +62,16 @@ Start the cycle for **chapter $1** of DDIA.
      ## What I got wrong
 
      <!-- Only after the above is done. 45 minutes. Open the book and correct
-          yourself here. Each correction cites a section.
+          yourself here. Each correction cites the chapter and heading it
+          came from. While the book is open, copy this chapter's headings
+          into plan/toc.md.
 
           Watch for two kinds:
             - [shaky] that turned out right — you know more than you think
             - [sure] that turned out wrong — the dangerous kind; raw
               correctness hides these completely
 
-          Every miss goes into review/queue.md. -->
+          /close moves every correction into review/queue.md. -->
      ```
 
      The sub-headings are deliberately *not* the chapter's own section
@@ -71,24 +79,40 @@ Start the cycle for **chapter $1** of DDIA.
      table of contents without understanding anything.
 
      Where a section will predictably be thin or empty for this chapter, say
-     so in its comment, so a short section doesn't read as bad recall.
-     Connections is empty until roughly chapter 6.
+     so in its comment, so a short section doesn't read as bad recall. For
+     chapters 1–3, point Connections at systems they've built or run at work
+     — there are no earlier chapters to connect to yet.
 
    - `explainers/chNN.md` — heading: `## <chapter title>, explained` plus a
-     reminder of the constraint: no jargon undefined in the same document
+     reminder of the constraint: no jargon undefined in the same document.
+     For chapters 1–3, add that Connections is scored against systems they've
+     built (rubric dimension 5).
    - `diagrams/chNN.md` — headings: `## From memory` (empty mermaid block) and
      `## Reference` (left empty until after the from-memory attempt)
-   - the build directory named in the spine table, with a `NOTES.md` stub for
-     recording where they got stuck
 
-3. Update `PROGRESS.md`: mark chapter $1 as in progress, fill in its dates.
+   The build lives under `builds/`, which is the learner's; your edit tools are
+   denied there. Tell them what to create instead: the build directory named
+   in the spine table, with a `NOTES.md` for recording where they got stuck.
+   For spine chapters, that's a new `## Ch $1` section in
+   `builds/kvstore/NOTES.md`, opening with the scope note — MVP / Stretch /
+   Ignored (plan §5) — written before any code.
 
-4. Then tell them, briefly:
-   - the chapter's title and its date window
-   - the build goal in one or two sentences, and its hard timebox
-     (3.0h normally, 2.25h on design-problem cycles)
+4. Update `PROGRESS.md`: mark chapter $1 in progress, fill in its Actual start
+   date (today), update the Current cycle line, and copy the phase checklist
+   into the cycle log under a heading for this chapter. On cycles without a
+   design problem, write that line as plain text, not a box; on non-spine
+   chapters, note "no tag" on the Closed line.
+
+5. Then tell them, briefly:
+   - the chapter's title
+   - the build goal in one or two sentences, and its 3.0h timebox — a
+     checkpoint, not a cutoff (plan §4)
+   - for spine chapters: write the scope note before any code
    - whether a design problem lands this cycle, and which one
    - which items are due in `review/queue.md` this cycle
+   - any open question from plan §5 that's raised at this chapter or due
+     before this chapter's build — quoted verbatim, with no hint toward an
+     answer
 
 Do **not** summarize the chapter, preview its concepts, or explain what they're
 about to read. The first pass should be unspoiled.

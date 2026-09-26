@@ -56,6 +56,9 @@ Are the numbers sane and stated explicitly?
 
 - Failure modes (dimension 3) is the one that most separates real system design
   ability from rehearsed interview patter. Weight it heaviest in the summary.
+- Score dimension 1 from the `## Interviewer log` at the bottom of the answer
+  file: which held-back requirements they asked for, and whether the design
+  used the answers.
 - For the timed mocks, note the clock: what was still unaddressed at 45 minutes
   matters as much as what was covered.
 - Finish with one sentence: the single biggest gap in this answer.

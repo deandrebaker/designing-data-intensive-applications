@@ -5,18 +5,19 @@ A structured read of *Designing Data-Intensive Applications*, 2nd edition
 practice problems. Depth first; interview practice is how the depth gets
 tested, not the goal.
 
-**Runs Sep 14, 2026 → Mar 13, 2027.** Full design:
+**Started Sep 14, 2026; baseline end Mar 13, 2027.** No hard deadline — the
+schedule slides rather than anything getting cut. Full design:
 [`plan/2026-09-13-ddia-learning-plan.md`](plan/2026-09-13-ddia-learning-plan.md).
 Live status: [`PROGRESS.md`](PROGRESS.md).
 
 ## The cycle
 
-Each chapter is a ~10-day, 9.75-hour cycle. Every phase is a retrieval test of
-the one before it:
+Each chapter budgets 9.75 hours. Every phase is a retrieval test of the one
+before it:
 
 1. **Read** (3.0h) — clean first pass, margin marks only
 2. **Distill** (1.5h) — *closed book*, then correct yourself
-3. **Build** (3.0h) — hard timebox, deliberately unpolished
+3. **Build** (3.0h checkpoint) — deliberately unpolished; MVP before moving on
 4. **Explain** (1.0h) — Feynman write-up, no undefined jargon
 5. **Grill** (0.75h) — closed-book quiz with Claude
 6. **Review** (0.5h) — spaced repetition
@@ -35,17 +36,20 @@ chapter 14 has no build and trades it for an essay and a design problem.
 |---|---|
 | `/cycle N` | Scaffold chapter N — files, build goal, timebox |
 | `/grill N` | Closed-book quiz, four escalating tiers |
-| `/grade explainer N` · `/grade problem N` | Score against the rubric |
-| `/review` | Work the spaced-repetition queue |
+| `/grade explainer N` · `problem N` · `mock N` | Score against the rubric |
+| `/review` · `/review exam` | Work the spaced-repetition queue · cumulative exam |
+| `/interview N` · `/interview mock N` | Design problem or mock, Claude as interviewer |
+| `/close N` | Verify phases, record hours, feed the queue, hand off |
 
 ## Layout
 
 ```
-plan/         the design doc
+plan/         the design doc + toc.md (the book's headings)
 notes/        closed-book distillations + "what I got wrong"
 explainers/   Feynman write-ups
 diagrams/     from-memory mermaid, then reference
-builds/       code — kvstore/ is the spine
-problems/     design problems + graded feedback
+builds/       code — kvstore/ is the spine; Claude never writes here
+harness/      Claude-written scaffolding around builds, if any
+problems/     design problems + mocks, with graded feedback
 review/       spaced-repetition queue
 ```

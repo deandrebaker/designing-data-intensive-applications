@@ -3,7 +3,7 @@ description: Closed-book quiz on a chapter, escalating through four tiers
 argument-hint: <chapter number>
 ---
 
-Grill Deandre on **chapter $1**. This is closed-book — say so at the start, and
+Grill the learner on **chapter $1**. This is closed-book — say so at the start, and
 hold the line if they try to look something up mid-session.
 
 Read their `notes/chNN-*.md` (especially the "What I got wrong" section) and
@@ -28,20 +28,29 @@ the thing you just described."
 **Tier 4 — Adversarial.** Attack their own build. "Your chapter 6 replication
 drops acknowledged writes under this specific partition. Walk me through why,
 and tell me what the book already warned you about that you didn't implement."
-Use their real code — read it before asking.
+Use their real code — read it before asking. Chapter 14 has no build: aim
+tier 4 at the kvstore as a whole and at their chapter 14 critique.
 
 ## Rules
 
 - One question per message. Never stack them.
 - When an answer is wrong, do not correct it immediately — ask a narrower
   question that exposes the error to them. Correct only after the second miss.
-- When correcting, cite the chapter and section.
+- When correcting, cite per `CLAUDE.md` rule 4.
 - Do not accept fluent-sounding answers that dodge the mechanism. "It uses
   consensus to stay consistent" is a dodge. Push: "which mechanism, and what
   does it cost you when a node is slow rather than dead?"
 
 ## After
 
-Append every miss to `review/queue.md` as a retrieval item — the prompt they
-failed, the chapter, and `due: next cycle`. Then give a short, honest read:
-what's solid, what's shaky, and the single concept to re-read before moving on.
+1. Give a short, honest read: what's solid, what's shaky, and the single
+   concept to re-read before moving on. The grill is over; the book can open.
+2. Add items to `review/queue.md`, in the format defined there, due cycle
+   $1 + 1 at interval 1:
+   - every miss
+   - 3–5 core items covering the chapter's central mechanisms, including ones
+     they answered well
+   The learner writes each `key`: ask for one line in their own words and record
+   it verbatim. Tag `verify` on any item whose key rests on a correction you
+   made — it came from you, not the book.
+3. Tick Grill in chapter $1's checklist in `PROGRESS.md`.
