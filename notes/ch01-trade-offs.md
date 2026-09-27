@@ -2,135 +2,133 @@
 
 ## Distillation (closed-book)
 
-<!-- Book shut. 45 minutes. Full sentences, not fragments — a fragment can't be
-     wrong, which is how closed-book recall gets faked without you noticing.
-     Mark every claim [sure] or [shaky]. -->
+<!-- Book shut. 45 minutes. Full sentences, not fragments — a fragment
+     can't be wrong, which is how closed-book recall gets faked without
+     you noticing. Mark every claim [sure] or [shaky]. -->
 
 ### The question this chapter answers
 
 <!-- One sentence. If you can't write it, you didn't get the chapter. -->
 
-[sure] What are the trade-offs to consider when designing a data system?
+What are the main architectural decisions to make when designing a data-intensive system?
 
-- [sure] Data system: A system used for data management.
-- [shaky] Data management: The process of accessing and modifying information according to a set of rules.
-- [sure] System: A collection of interconnected parts that work together to perform a task.
+### Architectural decisions
 
-### Mechanisms
+#### How does the system process data?
 
-<!-- For each: what it does / how it works / what it costs.
-     The cost slot is mandatory. An empty one means you absorbed marketing,
-     not engineering — and it's exactly what the explainer rubric scores in
-     dimension 2.
+- A system is a collection of interconnected components that work together to achieve a goal.
+- A data-intensive system is a system where the primary challenges include data management, which is storing or processing data. The challenges can include large data volumes and high query rates.
 
-     Thin for this chapter. That's correct for ch 1, not a bad recall. -->
+##### Operational systems
 
-#### OLTP (Online Transactional Processing)
+- Operational systems are used for reading and modifying data based on actions performed by the users.
+- Transactional processing is the mechanism used by operational systems to look up, insert, update, and delete small number of records.
+- Databases are used to store data for transactional processing. They store entire rows consecutively so that a record can be read from in a single load, and a record can be modified in a single node. This is efficient for transactional processing but inefficient for analytical processing.
 
-- What it does: Performs a sequence of data management operations that either all succeed together or all fail together. When a failure occurs, the system is reverted back to its initial state.
+##### Analytical processing systems
 
-#### OLAP (Online Analytical Processing)
+- Analytical systems are used for performing analytical queries on read-only data.
+- Analytical processing is the mechanism used by analytical systems for querying over a huge number of records and calculating agreggate statistics.
+- Data warehouses are used to store structured data for analytical processing. They store entire columns consecutively so that many values in a field can be read from in a single load, so the entire field can be read from in less loads than with a database. This is efficient for analytical processing but inefficient for transactional processing.
+- Data lakes are used to store unstructured data for analytical processing.
+- Data pipelines are used to move data from data sources (usually operational systems) into an analytical system. A reverse data pipeline moves data from analytical systems to an operational system.
+- Some analytical systems may share chacteristics of a supercomputing system to increase performance of analytical processing workloads.
 
-- What it does: Performs analytical queries on data to calculate aggregate statistics.
+##### Hybrid transactional/analytical systems
 
-#### HTAP (Hybrid Transactional Analytical Processing)
+- Hybrid systems are a middle ground of operational and analytical systems. They provide a common interface for performing transactions and analytical queries, while having separate transactional and analytical processing systems internally. Ideal when an application needs both transactional and analytical processing from the dame data.
 
-- What it does: Performs both OLTP and OLAP operations on the same data.
-- How it does it: Uses a single database internally, so no need to transfer data between separate systems.
-- What it costs: Does not perform OLTP or OLAP operations as optimally as separate OLTP and OLAP systems since both systems may have different use cases.
+#### What does the data represent?
 
-#### ETL (Extract-Transform-Load) pipelining
+##### Systems of record
 
-- What it does: Moves data from data sources into a data warehouse for analytical processing. The data must be transformed to match the structure of the data warehouse.
-- How it does it: It extracts data from the data sources, perform transformations on the data, then loads the data into the data warehouse.
+- Systems of record hold canonical data, and act as the source of truth for the system. They are normalized to avoid redundancy and maintain data consistency.
+- Operational services usually consist of systems of record but may also consist of derived data systems.
 
-#### Data pipelining
+##### Derived data systems
 
-- What it does: Moves data from a data source into a data lake. The data can be unprocessed.
-- How it does it: It extracts data from the data sources, then loads the data into the data lake.
+- Derived data asystems take data from another system and process it to create derived data. They are denormalized and redundant to improve processing speed.
+- Analytical systems are usually derived data systems.
+- Derived data systems can be used to integrate data from different systems together.
 
-### Trade-offs
+#### Who manages the hardware for the system?
 
-<!-- The load-bearing section for this chapter. -->
+##### Self-hosted sytems
 
-| Axis               | One side         | Other side          | What decides                                         |
-| ------------------ | ---------------- | ------------------- | ---------------------------------------------------- |
-| Data processing    | Operational      | Analytical          | Data access patterns                                 |
-| Data flow          | System of record | Derived data system | Data consistency requirements                        |
-| Hosting            | Self hosting     | Cloud hosting       | Workload predictability                              |
-| Cloud architecture | Cloud enabled    | Cloud native        | Infrastructure control                               |
-| Node distribution  | Single-node      | Distributed         | Nature of the problem, load, geographic requirements |
-| Distributed system | Microservices    | Serverless          | Organization size, workload                          |
-| Compute            | Cloud computing  | Super computing     | System function                                      |
+- Self-hosted systems are maintained by system administrators and can be fine-tuned to handle a specific load. Also, any issues with the system infrastructure can be fixed by the system administrators. However, even when the load of the system decreases, they still cost money to leave on standby. Also, if the load unexpectedly rises past the expected load, the system cannot acquire more resources to meet the demand.
 
-### When this breaks
+##### Cloud-hosted sytems
 
-<!-- Failure modes, and the conditions that trigger them. -->
+- Cloud-hosted systems are maintained by cloud service providers and can automatically allocate/deallocate resources to handle variable load, while being charged proportional to the amount of consumed resources. However, the system cannot be fine-tuned as much as a self-hosted system, and any issues with the cloud infrastructure cannot be addressed by the system maintainers.
 
-#### Self hosting
+#### What environment does the software run in a cloud-hosted system?
 
-- When the workload exceeds beyond the peak capacity, the system cannot serve every request.
+##### Virtual machines
 
-#### Cloud hosting
+- Virtual machines provide an Infrastructure-as-a-Service environment for software to run on, allowing the software access to the operating system. Each machine has an allocated amount of compute, memory, storage, and network bandwidth. Similar to traditional computers but can be provisioned faster and with larger sizes. The consequence is that they need more maintenance and cannot automatically allocate or deallocate resources to support dynamic load. They require developers to build low-level abstractions for interacting with the OS.
+- Developers need to focus on capacity planning and performance optimizations to ensure the infrastructure can handle the load.
 
-- When a cloud service is down, the system goes down with it until the cloud service recovers.
+##### Cloud native services
 
-#### Cloud enabled
+- Cloud-native systems run on platforms that provide abstractions for compute and storage, allowing the developers to focus on the high-level abstractions instead of building the low-level abstractions. They require less maintenance and can automatically allocate or deallocate resources to support dynamic load or recover from failures. The underlying hardware can be specialized to improve performance. The consequence is that there's less options for fine-tuning the system towards use cases that cloud services aren't optimized for.
+- Developers need to focus on financial planning and cost optimizations to save money while using cloud services.
 
-- When part of the system fails, unless there's built-in recovery, the system will fail.
+#### What is the structure of the system?
 
-#### Single-node systems
+##### Single-node systems
 
-- When the machine fails, the entire system fails.
-- When the workload exceeds what a single machine can handle, then the system can't process every request well.
+- Single-node systems are simpler to maintain and are simpler to scale to improve performance. However, they cannot solve problems that are inherently distributed. Also, when a component in a single-node system fails, the entire system may fail or need to be stopped so the failing component can be fixed. Also, external communication to the single-node may be bottlenecked by concurrent communication lines, and users that are geographically far away may have higher latency due to the time it takes for messages to be sent and received over a long distance. Also, there's a limit to how much load a single-node system can handle.
 
-#### Distributed systems
+##### Distributed systems
 
-- If the communication network between nodes is broken, then it might cause the system to fail.
+- Distributed systems are necessary for problems that are inherently distributed, and allow for redundancy and faster communication by having nodes closer to users. However, they are more complex to maintain due to communication within the system, and there's more points of failure in the communication lines. Communicating between nodes take longer, and troubleshooting is more difficult.
+- It's generally preferable to stay with single-node systems and scale them up until they no longer can scale, then switch to a distributed system.
 
-#### Supercomputing
+#### How are nodes distributed in a distributed system?
 
-- When a node fails, the whole system is stopped while the node is repaired.
+##### Microservices
+
+- Microservices are nodes in a system that provied an interface for interacting with other microservices. Each microservice has a specific job and is usually maintained by their own team in a large organization. Each microservice can be updated independently, but doing this without causing the system to fail may be challenging when other microservices depend on it while it's being updated. Also, microservices are usually still running even when they are not being used so that they are ready to respond to requests.
+
+##### Serverless
+
+- Serverless systems are build on top of Function-as-a-Service services, which can run software while abstracting the infrastructure behind it. It simplifies the management of the infrastructure, and the cost is proportional to the execution time of the software being ran on it. However, FaaS usually has slow start-up times since there's no permanent resource on standby.
 
 ### Connections
 
-<!-- What this changes about earlier chapters and about your own build.
-     Empty for ch 1 — correct. Starts earning its place around ch 6. -->
+<!-- What this changes about earlier chapters, about your own builds,
+     and about systems you've worked on. -->
+
+- I've spent a lot of time working on operational systems by building websites that act as a system of record, but not much time with building analytical systems
+- I did build an ETL pipeline with SSIS in the past, but didn't know it was moving data between databases and data warehouses. I also remember the concept of a data mart being mentioned while working on the project.
 
 ### Open questions
 
 <!-- WRITE THESE BEFORE OPENING THE BOOK.
      Things you're unsure of. Highest-value section in the file. -->
 
-- What mechanisms were mentioned in this chapter?
-- What are the remaining failure modes?
-- What an ETL system does?
-- How transactional processing work?
-- What does transactional processing cost?
-- How analytical processing work?
-- What does analytical processing cost?
-- What does ETL pipelining cost?
-- What does data pipelining cost?
-- What are the failure modes of operational systems?
-- What are the failure modes of analytical systems?
-- What are the failure modes of distributed systems?
-- What are the failure modes of microservices systems?
-- What are the failure modes of serverless systems?
+- Not sure how transactions actually work. That'll be covered in a later chpater.
+- How data is stored in a database vs data warehouse.
+- How cloud native systems compare to using VMs.
+- Identifying when a problem is inherently distributed.
 
 ## What I got wrong
 
 <!-- Only after the above is done. 45 minutes. Open the book and correct
-     yourself here. Each correction cites a section.
+     yourself here. Each correction cites the chapter and heading it
+     came from. While the book is open, copy this chapter's headings
+     into plan/toc.md.
 
      Watch for two kinds:
        - [shaky] that turned out right — you know more than you think
-       - [sure] that turned out wrong — the dangerous kind; raw correctness
-         hides these completely
+       - [sure] that turned out wrong — the dangerous kind; raw
+         correctness hides these completely
 
-     Every miss goes into review/queue.md. -->
+     /close moves every correction into review/queue.md. -->
 
-- I didn't think of transactional processing as a mechanism
-- I didn't think of analytical processing as a mechanism
-- I misunderstood how HLTP works. I thought it internally had 2 systems, but in practice it's just 1 database with OLTP and OLAP operations.
-- I didn't think of listing system-of-record and derived data systems in the trade-offs table.
-- I forgot about microservices and serverless.
+- I didn't fully understand what an operational system is and how it relates to OLTP and systems of record.
+- I didn't fully understand what an analytical system is and how it relates to OLAP and derived data system.
+- I forgot how HTAP works.
+- Forgot about serverless architecture.
+- Didn't remember the pros and cons of VMs vs Cloud-Native systems.
+- I was mixing up single-node and supercomputing systems together.
