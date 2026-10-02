@@ -1,2 +1,3 @@
-row_store.db
-column_store.duckdb
+*.db
+*.duckdb
+data_*
